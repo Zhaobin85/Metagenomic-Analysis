@@ -1,1 +1,1 @@
-This program is designed to perform the assembly and binning of the metagenomes, wich included trimming of the metagenomic reads, congtig assembly with megahit, MAGs grouping with metawrap, genome quality assessement with CheckM, etc.
+This program is designed to perform the assembly and binning of the metagenomes of Spartina alterniflora root microbiomes, wich included trimming of the metagenomic reads, congtig assembly with megahit, MAGs grouping with metawrap, genome quality assessement with CheckM, etc.
