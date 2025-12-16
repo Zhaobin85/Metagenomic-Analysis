@@ -16,4 +16,12 @@ python fasta_length_filter.py A1.bin.1.fa 1000
 5. Genome quality assessment
 checkm lineage_wf -x fa --tab_table ./All_MAGs ./All_MAGs_Checkm -f All_MAGs.txt -t 36
 
+Calculation of the host DNA contamination
+
+1. Index the host genome
+$bowtie2-build GCA_008808055.3.fna S.alterniflora 
+
+2. 
+$bowtie2 -p 24 -1 A.R1.trim.fastq -2 A.R2.trim.fastq -x S.alterniflora --un-conc-gz ./A.dehost.R%.fastq.gz -S ./A.host.sam
+
 
