@@ -1,4 +1,4 @@
-This program is designed to perform the assembly and binning of the metagenomes of Spartina alterniflora root microbiomes, wich included trimming of the metagenomic reads, congtig assembly with megahit, MAGs grouping with metawrap, genome quality assessement with CheckM, etc.
+This program is designed to perform the assembly and binning of the metagenomes of Spartina alterniflora root microbiomes, wich included trimming of the metagenomic reads, congtig assembly with megahit, MAGs grouping with metawrap, genome quality assessement with CheckM, and host DNA contamination calculation and removel, etc.
 
 ###Step-by-step pipeline for the assembly and binning of the metagenomes.
 
@@ -6,9 +6,9 @@ Step 1. Raw reads trimming using Sickle
 sickle pe -f A1.R1.raw.fastq.gz -r A1.R2.raw.fastq.gz -o A1.R1.trim.fastq -p A1.R2.trim.fastq -s A1.single.trim.fastq -l 50 -q 20 -t sanger 
 
 2. Assembly and Co-assembly
-For single sample:
+##For single sample:
 megahit -1 A1.R1.trim.fastq -2 A1.R2.trim.fastq -o A1_assembly --min-contig-len 1000
-For multiple samples:
+##For multiple samples:
 megahit -1 A1.R1.trim.fastq,A2.R1.trim.fastq -2 A1.R2.trim.fastq,A2.R2.trim.fastq -o A1A2_assembly --min-contig-len 1000
 
 3. Binning of the contigs
@@ -25,7 +25,11 @@ checkm lineage_wf -x fa --tab_table ./All_MAGs ./All_MAGs_Checkm -f All_MAGs.txt
 ###Calculation of the host DNA contamination
 
 1. Index the host genome
-$bowtie2-build GCA_008808055.3.fna S.alterniflora 
+bowtie2-build GCA_008808055.3.fna S.alterniflora 
 
-2. 
-$bowtie2 -p 24 -1 A.R1.trim.fastq -2 A.R2.trim.fastq -x S.alterniflora --un-conc-gz ./A.dehost.R%.fastq.gz -S ./A.host.sam
+2. Mapping reads to host genome
+bowtie2 -p 24 -1 A1.R1.trim.fastq -2 A1.R2.trim.fastq -x S.alterniflora --un-conc-gz ./A1.dehost.R%.fastq.gz -S ./A.host.sam
+
+3. Calclation of the contamination
+fastp -i A1.dehost.R1.fq.gz -I A1.dehost.R2.fq.gz -o A1.clean.R1.fq.gz -O A1.clean.R2.fq.gz --html A1.dehost.html --thread 16
+
